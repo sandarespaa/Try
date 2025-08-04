@@ -1,0 +1,98 @@
+-- Unified script with auto fishing logic, teleport, inventory, and enhancements
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+
+--- Sandarespaa add new feature and variable
+local Players = game:GetService("Players")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+if not player or not replicatedStorage then return end
+
+-- Load Rayfield
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/main/source.lua"))()
+
+-- Window
+local Window = Rayfield:CreateWindow({
+    Name = "Fish It Script",
+    LoadingTitle = "Fish It",
+    LoadingSubtitle = "by @Sandarespaa",
+    Theme = "Amethyst",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "Kontol",
+        FileName = "FishIt"
+    },
+    KeySystem = false
+})
+
+
+-- Tab
+local ModTab = Window:CreateTab("Rod Modifier", 4483362458)
+
+-- Variables
+local castSpeed = 1
+local pullStrength = 1
+local durability = 100
+
+-- Sliders
+ModTab:CreateSlider({
+   Name = "Casting Speed",
+   Range = {1, 10},
+   Increment = 0.1,
+   Suffix = "x",
+   CurrentValue = 1,
+   Callback = function(Value)
+      castSpeed = Value
+      updateRodStats()
+   end,
+})
+
+ModTab:CreateSlider({
+   Name = "Pull Strength",
+   Range = {1, 10},
+   Increment = 0.1,
+   Suffix = "x",
+   CurrentValue = 1,
+   Callback = function(Value)
+      pullStrength = Value
+      updateRodStats()
+   end,
+})
+
+ModTab:CreateSlider({
+   Name = "Rod Durability",
+   Range = {1, 100},
+   Increment = 1,
+   Suffix = "%",
+   CurrentValue = 100,
+   Callback = function(Value)
+      durability = Value
+      updateRodStats()
+   end,
+})
+
+-- Function untuk update Rod (Kamu harus sesuaikan ini dengan sistem dalam game "Fish It")
+function updateRodStats()
+   local player = game.Players.LocalPlayer
+   local rod = player.Character and player.Character:FindFirstChild("FishingRod")
+
+   if rod then
+      -- Cek apakah rod punya properti yang bisa dimodifikasi
+      if rod:FindFirstChild("CastSpeed") then
+         rod.CastSpeed.Value = castSpeed
+      end
+      if rod:FindFirstChild("PullStrength") then
+         rod.PullStrength.Value = pullStrength
+      end
+      if rod:FindFirstChild("Durability") then
+         rod.Durability.Value = durability
+      end
+   end
+end
